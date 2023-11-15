@@ -16,6 +16,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
 LOCAL_APPS = [
     'monitoring.core.apps.CoreConfig',
     'monitoring.common.apps.CommonConfig',
+    "monitoring.users.apps.UsersConfig",
 ]
 
 THIRD_PARTY_APPS = [
@@ -94,6 +95,7 @@ if os.environ.get('GITHUB_WORKFLOW'):
         }
     }
 
+AUTH_USER_MODEL = "users.BaseUser"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
