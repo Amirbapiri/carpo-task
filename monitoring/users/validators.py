@@ -11,3 +11,12 @@ def number_validator(password):
             _("password must include number"),
             code="password_must_include_number",
         )
+
+
+def letter_validator(password):
+    regex = re.compile("[a-zA-Z]")
+    if regex.search(password) == None:
+        raise ValidationError(
+            _("password must include letter"),
+            code="password_must_include_letter",
+        )

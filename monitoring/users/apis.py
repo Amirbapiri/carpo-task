@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 
 from .models import SYSAdminUser
-from .validators import number_validator
+from .validators import number_validator, letter_validator
 
 
 class SysAdminRegistrationAPI(APIView):
@@ -13,6 +13,7 @@ class SysAdminRegistrationAPI(APIView):
             max_length=100,
             validators=[
                 number_validator,
+                letter_validator,
             ],
         )
         confirm_password = serializers.CharField(max_length=100)
