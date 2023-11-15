@@ -33,6 +33,8 @@ class HostAPI(APIView):
 
     def post(self, request, *args, **kwargs):
         organ_id = request.data.get("organ_id")
+        
+        # TODO: error handling for Organ instnace
 
         serializer = self.HostInputSerializer(
             data=request.data,
