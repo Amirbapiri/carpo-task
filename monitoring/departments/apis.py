@@ -11,6 +11,12 @@ from monitoring.hosts.models import Host
 from .permissions import IsHostAdmin
 
 
+class HostOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Host
+        fields = ("id", "name", "description", "host_admin")
+
+
 class DepartmentAPI(APIView):
     permission_classes = [IsAuthenticated, IsHostAdmin]
     authentication_classes = [JWTAuthentication]
@@ -21,6 +27,8 @@ class DepartmentAPI(APIView):
             fields = ("name", "host")
 
     class DepartmentOutputSerializer(serializers.ModelSerializer):
+        host = HostOutputSerializer()
+
         class Meta:
             model = Department
             fields = ("id", "name", "host")
