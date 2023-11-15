@@ -39,6 +39,11 @@ class OrganAPI(APIView):
 
         def get_sys_admin(self, organ_instance):
             return organ_instance.sys_admin.email
+        
+    def get(self, request, *args, **kwargs):
+        organs = Organ.objects.all()
+        serializer = self.OrganOutputSerializer(organs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         serializer = self.OrganInputSerializer(data=request.data)

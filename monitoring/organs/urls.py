@@ -8,4 +8,9 @@ urlpatterns = [
         OrganAPI.as_view(),
         name="list",
     ),
+    path(
+        "",
+        OrganAPI.as_view(),
+        name="create",
+    ),
 ]
