@@ -26,14 +26,23 @@ class HostAPI(APIView):
             validated_data["organ"] = organ
             return super().create(validated_data)
 
-    class HostOutputSerializer(serializers.Serializer):
+    class HostOutputSerializer(serializers.ModelSerializer):
         class Meta:
             model = Host
-            fields = "__all__"
+            fields = (
+                "name",
+                "description",
+            )
+
+    def get(self, request, *args, **kwargs):
+        organs = Host.objects.all()
+        print(organs)
+        serializer = self.HostOutputSerializer(organs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         organ_id = request.data.get("organ_id")
-        
+
         # TODO: error handling for Organ instnace
 
         serializer = self.HostInputSerializer(
@@ -41,7 +50,7 @@ class HostAPI(APIView):
             context={"organ_id": organ_id},
         )
         if serializer.is_valid(raise_exception=True):
-            host = serializer.save()
+            host = serializer.save(host_admin=request.user)
             json_to_return = self.HostOutputSerializer(host).data
             return Response(json_to_return, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
