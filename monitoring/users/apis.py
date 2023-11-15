@@ -19,6 +19,7 @@ class SysAdminRegistrationAPI(APIView):
                 number_validator,
                 letter_validator,
                 special_char_validator,
+                MinLengthValidator(limit_value=8),
             ],
         )
         confirm_password = serializers.CharField(max_length=100)
