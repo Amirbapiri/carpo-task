@@ -1,9 +1,11 @@
+from django.core.validators import MinLengthValidator
+
 from rest_framework.views import APIView
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import SYSAdminUser
+from .models import SYSAdminUser, HostAdminUser
 from .validators import number_validator, letter_validator, special_char_validator
 from .services import register_sysadmin
 
@@ -81,4 +83,32 @@ class SysAdminRegistrationAPI(APIView):
 
 
 class HostAdminRegistrationAPI(APIView):
-    pass
+    class InputHostAdminSerializer(serializers.Serializer):
+        email = serializers.EmailField(max_length=255)
+        password = serializers.CharField(
+            max_length=100,
+            validators=[
+                number_validator,
+                letter_validator,
+                special_char_validator,
+                MinLengthValidator(limit_value=8),
+            ],
+        )
+        confirm_password = serializers.CharField(max_length=100)
+
+        def validate_email(self, email):
+            if HostAdminUser.objects.filter(email=email).exists():
+                raise serializers.ValidationError("Email's already taken")
+            return email
+
+        def validate(self, data):
+            if not data.get("password") or not data.get("confirm_password"):
+                raise serializers.ValidationError(
+                    "Please fill password and confirm password"
+                )
+
+            if data.get("password") != data.get("confirm_password"):
+                raise serializers.ValidationError(
+                    "confirm password is not equal to password"
+                )
+            return data
