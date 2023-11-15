@@ -3,11 +3,14 @@ from django.core.validators import MinLengthValidator
 from rest_framework.views import APIView
 from rest_framework import serializers, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import SYSAdminUser, HostAdminUser
 from .validators import number_validator, letter_validator, special_char_validator
 from .services import register_sysadmin, register_hostadmin
+from .permissions import IsSYSAdminUser
 
 
 class SysAdminRegistrationAPI(APIView):
@@ -84,6 +87,9 @@ class SysAdminRegistrationAPI(APIView):
 
 
 class HostAdminRegistrationAPI(APIView):
+    permission_classes = [IsAuthenticated, IsSYSAdminUser]
+    authentication_classes = [JWTAuthentication]
+    
     class InputHostAdminSerializer(serializers.Serializer):
         email = serializers.EmailField(max_length=255)
         password = serializers.CharField(
