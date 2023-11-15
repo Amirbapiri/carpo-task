@@ -20,6 +20,7 @@ LOCAL_APPS = [
     'monitoring.authentication.apps.AuthenticationConfig',
     'monitoring.organs.apps.OrgansConfig',
     'monitoring.hosts.apps.HostsConfig',
+    'monitoring.departments.apps.DepartmentsConfig',
 ]
 
 THIRD_PARTY_APPS = [
