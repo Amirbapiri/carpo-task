@@ -17,6 +17,7 @@ LOCAL_APPS = [
     'monitoring.core.apps.CoreConfig',
     'monitoring.common.apps.CommonConfig',
     "monitoring.users.apps.UsersConfig",
+    'monitoring.authentication.apps.AuthenticationConfig',
 ]
 
 THIRD_PARTY_APPS = [
