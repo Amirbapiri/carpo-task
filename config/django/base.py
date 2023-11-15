@@ -21,6 +21,7 @@ LOCAL_APPS = [
     'monitoring.organs.apps.OrgansConfig',
     'monitoring.hosts.apps.HostsConfig',
     'monitoring.departments.apps.DepartmentsConfig',
+    'monitoring.sensors.apps.SensorsConfig',
 ]
 
 THIRD_PARTY_APPS = [
