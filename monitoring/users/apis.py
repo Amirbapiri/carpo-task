@@ -89,7 +89,7 @@ class SysAdminRegistrationAPI(APIView):
 class HostAdminRegistrationAPI(APIView):
     permission_classes = [IsAuthenticated, IsSYSAdminUser]
     authentication_classes = [JWTAuthentication]
-    
+
     class InputHostAdminSerializer(serializers.Serializer):
         email = serializers.EmailField(max_length=255)
         password = serializers.CharField(
