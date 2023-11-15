@@ -113,3 +113,22 @@ class HostAdminRegistrationAPI(APIView):
                     "confirm password is not equal to password"
                 )
             return data
+
+    class OutputHostAdminSerializer(serializers.ModelSerializer):
+        token = serializers.SerializerMethodField("get_token")
+
+        class Meta:
+            model = HostAdminUser
+            fields = ("email", "token", "created_at", "updated_at")
+
+        def get_token(self, user_instance):
+            data = dict()
+
+            token_class = RefreshToken
+
+            refresh = token_class.for_user(user_instance)
+
+            data["refresh"] = str(refresh)
+            data["access"] = str(refresh.access_token)
+
+            return data
