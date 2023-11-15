@@ -35,3 +35,8 @@ class SysAdminRegistrationAPI(APIView):
                     "confirm password is not equal to password"
                 )
             return data
+
+    class OutputSysAdminSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = SYSAdminUser
+            fields = ("email", "token", "created_at", "updated_at")
