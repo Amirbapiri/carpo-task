@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework import serializers
-
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import SYSAdminUser
 from .validators import number_validator, letter_validator, special_char_validator
@@ -37,6 +37,20 @@ class SysAdminRegistrationAPI(APIView):
             return data
 
     class OutputSysAdminSerializer(serializers.ModelSerializer):
+        token = serializers.SerializerMethodField("get_token")
+
         class Meta:
             model = SYSAdminUser
             fields = ("email", "token", "created_at", "updated_at")
+
+        def get_token(self, user_instance):
+            data = dict()
+
+            token_class = RefreshToken
+
+            refresh = token_class.for_user(user_instance)
+
+            data["refresh"] = str(refresh)
+            data["access"] = str(refresh.access_token)
+
+            return data
