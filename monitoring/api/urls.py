@@ -5,4 +5,5 @@ urlpatterns = [
     path("users/", include(("monitoring.users.urls", "users"))),
     path("organs/", include(("monitoring.organs.urls", "organs"))),
     path("hosts/", include(("monitoring.hosts.urls", "hosts"))),
+    path("departments/", include(("monitoring.departments.urls", "departments"))),
 ]
