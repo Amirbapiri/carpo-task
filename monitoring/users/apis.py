@@ -3,12 +3,18 @@ from rest_framework import serializers
 
 
 from .models import SYSAdminUser
+from .validators import number_validator
 
 
 class SysAdminRegistrationAPI(APIView):
     class InputSysAdminSerializer(serializers.Serializer):
         email = serializers.EmailField(max_length=255)
-        password = serializers.CharField(max_length=100,)
+        password = serializers.CharField(
+            max_length=100,
+            validators=[
+                number_validator,
+            ],
+        )
         confirm_password = serializers.CharField(max_length=100)
 
         def validate_email(self, email):
