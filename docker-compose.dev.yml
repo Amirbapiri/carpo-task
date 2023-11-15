@@ -50,6 +50,41 @@ services:
     volumes:
       - redis-data:/data
 
+  celery:
+    build:
+      context: .
+      dockerfile: docker/production.Dockerfile
+    command: celery -A monitoring.sensors.tasks worker -l info --without-gossip --without-mingle --without-heartbeat
+    container_name: worker
+    # command: ./docker/celery_entrypoint.sh
+    environment:
+      - DATABASE_URL=psql://user:password@db:5432/monitoring
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - rabbitmq
+    restart: on-failure
+
+  beats:
+    build:
+      context: .
+      dockerfile: docker/production.Dockerfile
+    command: celery -A monitoring.sensors.tasks beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    container_name: beats
+    # command: ./docker/beats_entrypoint.sh
+    environment:
+      - DATABASE_URL=psql://user:password@db:5432/monitoring
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - rabbitmq
+    restart: on-failure
+
+
 
 volumes:
     postgres-data:
