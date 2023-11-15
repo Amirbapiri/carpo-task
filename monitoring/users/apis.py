@@ -1,9 +1,11 @@
 from rest_framework.views import APIView
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import SYSAdminUser
 from .validators import number_validator, letter_validator, special_char_validator
+from .services import register_sysadmin
 
 
 class SysAdminRegistrationAPI(APIView):
@@ -54,3 +56,25 @@ class SysAdminRegistrationAPI(APIView):
             data["access"] = str(refresh.access_token)
 
             return data
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.InputSysAdminSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            user = register_sysadmin(
+                email=serializer.validated_data.get("email"),
+                password=serializer.validated_data.get("password"),
+            )
+        except Exception as ex:
+            return Response(
+                f"Database error: {ex}",
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        json_to_return = self.OutputSysAdminSerializer(
+            user,
+            context={"request": request},
+        ).data
+        return Response(
+            json_to_return,
+            status=status.HTTP_200_OK,
+        )
