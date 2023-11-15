@@ -1,12 +1,35 @@
-from rest_framework.views import APIView
-
 from django.contrib.auth import get_user_model
 
+from rest_framework.views import APIView
+from rest_framework import serializers
+
+from .models import Organ
 
 
-# Now I want to create an instance of Organ only if user was role of SYSADMIN
+
 User = get_user_model()
 
 
 class OrganAPI(APIView):
-    pass
+    class OrganSysAdminOutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ("email",)
+
+    class OrganInputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Organ
+            fields = (
+                "name",
+                "description",
+            )
+
+    class OrganOutputSerializer(serializers.ModelSerializer):
+        sys_admin = serializers.SerializerMethodField()
+
+        class Meta:
+            model = Organ
+            fields = ("name", "description", "sys_admin")
+
+        def get_sys_admin(self, organ_instance):
+            return organ_instance.sys_admin.email
