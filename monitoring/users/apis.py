@@ -78,3 +78,7 @@ class SysAdminRegistrationAPI(APIView):
             json_to_return,
             status=status.HTTP_200_OK,
         )
+
+
+class HostAdminRegistrationAPI(APIView):
+    pass
